@@ -18,26 +18,10 @@ from flask import request, jsonify
 
 # ref: https://flask.palletsprojects.com/en/2.3.x/logging/
 from logging.config import dictConfig
-
+from flask.logging import default_handler
 
 # _DO_NOT_REMOVE_EXECUTION_ENV = False
 _DO_NOT_REMOVE_EXECUTION_ENV = True
-
-dictConfig({
-    'version': 1,
-    'formatters': {'default': {
-        'format': '[%(asctime)s] %(levelname)s in %(module)s: %(message)s',
-    }},
-    'handlers': {'wsgi': {
-        'class': 'logging.StreamHandler',
-        'stream': 'ext://flask.logging.wsgi_errors_stream',
-        'formatter': 'default'
-    }},
-    'root': {
-        'level': 'INFO',
-        'handlers': ['wsgi']
-    }
-})
 
 kwargs = {}
 app_path = os.path.dirname(__file__)
@@ -86,6 +70,30 @@ class PrefixMiddleware(object):
 app = Flask(__name__, **kwargs)
 
 app_prefix = os.getenv("SCRIPT_NAME")
+
+log_level = os.getenv("LOG_LEVEL", "INFO")
+
+# ref: https://flask.palletsprojects.com/en/2.0.x/logging/#basic-configuration
+# ref: https://stackoverflow.com/questions/71310178/using-python-logger-to-only-log-selected-level
+dictConfig({
+    'version': 1,
+    'formatters': {'default': {
+        'format': '[%(asctime)s] %(levelname)s in %(module)s: %(message)s',
+    }},
+    'handlers': {'wsgi': {
+        'class': 'logging.StreamHandler',
+        'stream': 'ext://flask.logging.wsgi_errors_stream',
+        'formatter': 'default'
+    }},
+    'root': {
+        'level': log_level,
+        'handlers': ['wsgi']
+    }
+})
+
+# logging.getLogger().setLevel(log_level)
+
+app.logger.info("log_level=%s" % log_level)
 
 if app_prefix:
     app.wsgi_app = PrefixMiddleware(app.wsgi_app, prefix=app_prefix)
@@ -172,8 +180,8 @@ def render_template():
             app.logger.info("response=%s" % PrettyLog(response))
             play = response['plays'][0]
             app.logger.info("play=%s" % PrettyLog(play))
-            # if exit_status != 0:
-            if exit_status['StatusCode'] != 0:
+            # if exit_status['StatusCode'] != 0:
+            if exit_status != 0:
                 error = play['tasks'][-1]['hosts']['localhost']['msg']
         if error:
             return jsonify(**{'error': text.native(error)}), 400

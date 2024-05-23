@@ -41,6 +41,16 @@ $ docker run -ti --name ansible-template-ui -d ansible-template-ui
 $ docker run -ti --name ansible-template-ui -d media.johnson.int:5000/ansible-template-ui:latest
 ```
 
+Run ansible-template-ui using specified image
+```shell
+$ docker run -d --name ansible-web \
+    --env LOG_LEVEL=DEBUG \
+    --env DOCKER_ANSIBLE_EE_IMAGE=lj020326/ansible-execution-env:stable \
+    -p 8123:8080 \
+    -v /var/run/docker.sock:/var/run/docker.sock \
+    ansible-template-ui:latest
+```
+
 Run locally built developer images
 ```shell
 $ docker build -t ansible-base-env:latest -f docker/base/Dockerfile docker/base
