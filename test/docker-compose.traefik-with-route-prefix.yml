@@ -133,7 +133,8 @@ services:
   ## ANSIBLETEMPLATEUI GROUP SERVICES
   ansible-template-ui:
 #    image: lj020326/ansible-template-ui:latest
-    image: media.johnson.int:5000/ansible-template-ui:latest
+#    image: media.johnson.int:5000/ansible-template-ui:latest
+    image: ansible-template-ui:latest
     container_name: ansible-template-ui
     restart: unless-stopped
 #    privileged: True
@@ -144,10 +145,10 @@ services:
     depends_on:
       - socket-proxy
     environment:
-       DOCKER_HOST: tcp://socket-proxy:2375
-       DOCKER_ANSIBLE_EE_IMAGE: lj020326/ansible-execution-env
-#       DOCKER_ANSIBLE_EE_IMAGE: media.johnson.int:5000/ansible-execution-env:latest
-       SCRIPT_NAME: /ansibleweb
+      LOG_LEVEL: DEBUG
+      DOCKER_ANSIBLE_EE_IMAGE: lj020326/ansible-execution-env
+#      DOCKER_ANSIBLE_EE_IMAGE: media.johnson.int:5000/ansible-execution-env:latest
+      SCRIPT_NAME: /ansibleweb
     ports:
       - 8080:8080
     labels:
