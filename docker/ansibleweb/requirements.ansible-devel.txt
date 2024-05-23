@@ -1,0 +1,4 @@
+jmespath
+netaddr
+ansible
+https://github.com/ansible/ansible/archive/devel.tar.gz

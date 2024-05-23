@@ -1,30 +1,52 @@
 name: Nightly Docker Image Rebuild
 on:
+  push:
+    branches: ['*']
   schedule:
-    - cron: '0 0 * * *'
-  workflow_dispatch:
+    ## Nightly Docker Image Rebuild (1:05am daily)
+    - cron: '5 1 * * *'
+#    ## Nightly Docker Image Rebuild (12am daily)
+#    - cron: '0 0 * * *'
+
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
 
+      - name: If the same workflow is already running from a previous commit, wait for it to finish
+        uses: ahmadnassri/action-workflow-queue@v1
+
       - name: Login to Docker Hub
         uses: docker/login-action@v2
         with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_TOKEN }}
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
-      - name: Build and push devel
+      - name: Build and push devel ansible-base-env
+        uses: docker/build-push-action@v3
+        with:
+          context: docker/base/
+          push: true
+          tags: ${{ github.repository_owner }}/ansible-base-env:latest
+
+      - name: Build and push devel ansible-execution-env
         uses: docker/build-push-action@v3
         with:
           context: docker/devel/
           push: true
-          tags: sivel/ansible-template-ui:latest
+          tags: ${{ github.repository_owner }}/ansible-execution-env:latest
 
-      - name: Build and push stable
+      - name: Build and push stable ansible-execution-env
         uses: docker/build-push-action@v3
         with:
           context: docker/stable/
           push: true
-          tags: sivel/ansible-template-ui:stable
+          tags: ${{ github.repository_owner }}/ansible-execution-env:stable
+
+      - name: Build and push ansible-template-ui
+        uses: docker/build-push-action@v3
+        with:
+          context: docker/ansibleweb/
+          push: true
+          tags: ${{ github.repository_owner }}/ansible-template-ui:latest

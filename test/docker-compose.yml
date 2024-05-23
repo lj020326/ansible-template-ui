@@ -1,0 +1,56 @@
+
+networks:
+  default:
+    driver: bridge
+
+##
+## To be used in combination with the molecule tests to debug containers
+##
+services:
+
+  ## ref: https://jacar.es/en/como-instalar-portainer-con-docker-compose/
+  portainer:
+    image: portainer/portainer-ce:latest
+    container_name: portainer
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ${HOME}/docker/portainer-data:/data
+    ports:
+      - 9000:9000
+
+  dozzle:
+    image: amir20/dozzle:latest
+    container_name: dozzle
+    restart: unless-stopped
+    security_opt:
+      - no-new-privileges:true
+    environment:
+      ## app envs
+      DOZZLE_FILTER: status=running
+      DOZZLE_LEVEL: info
+      DOZZLE_TAILSIZE: 300
+    ports:
+      - 8888:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  ansible-template-ui:
+#    image: lj020326/ansible-template-ui:latest
+    image: media.johnson.int:5000/ansible-template-ui:latest
+    container_name: ansible-template-ui
+    restart: unless-stopped
+    privileged: True
+    user: root
+    environment:
+#       DOCKER_ANSIBLE_EE_IMAGE: media.johnson.int:5000/ansible-template-ui:latest
+#       DOCKER_ANSIBLE_EE_IMAGE: lj020326/ansible-execution-env
+       DOCKER_ANSIBLE_EE_IMAGE: sivel/ansible-template-ui
+    ports:
+      - 8080:8080
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ${PWD}/ansible_template_ui/data:/data

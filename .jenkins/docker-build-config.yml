@@ -1,0 +1,27 @@
+---
+pipeline:
+  alwaysEmailList: ljohnson@dettonville.org
+  runInParallel: true
+  logLevel: DEBUG
+
+  buildArgs:
+    IMAGE_REGISTRY: media.johnson.int:5000
+
+  buildImageList:
+    - buildDir: docker/base
+      buildImageLabel: ansible-base-env:latest
+
+    - buildDir: docker/devel
+      buildImageLabel: ansible-execution-env:devel
+      buildArgs:
+        IMAGE_REGISTRY: media.johnson.int:5000
+        BASE_IMAGE_LABEL: ansible-base-env
+
+    - buildDir: docker/stable
+      buildImageLabel: ansible-execution-env:stable
+      buildArgs:
+        IMAGE_REGISTRY: media.johnson.int:5000
+        BASE_IMAGE_LABEL: ansible-base-env
+
+    - buildDir: docker/ansibleweb
+      buildImageLabel: ansible-template-ui

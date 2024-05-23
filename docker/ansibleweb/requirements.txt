@@ -1,0 +1,9 @@
+#docker==2.5.1
+#flask-lambda==0.0.4
+#flask-lambda
+docker==2.5.1
+flask
+## ref: https://stackoverflow.com/questions/64952238/docker-errors-dockerexception-error-while-fetching-server-api-version
+## ref: https://forums.docker.com/t/docker-errors-dockerexception-error-while-fetching-server-api-version-connection-aborted-filenotfounderror-2-no-such-file-or-directory-error-in-python/135637/7
+requests==2.31.0
+urllib3<2.0

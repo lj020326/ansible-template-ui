@@ -48,7 +48,7 @@ def find_version(*file_paths):
 
 # Get the long description from the relevant file
 try:
-    f = codecs.open('README.rst', encoding='utf-8')
+    f = codecs.open('README.md', encoding='utf-8')
     long_description = f.read()
     f.close()
 except:
@@ -68,9 +68,7 @@ setup(
     description='Web UI for testing ansible templates',
     long_description=long_description,
     keywords='ansible jinja jinja2 template ansible-template-ui',
-    author='Matt Martz',
-    author_email='matt@sivel.net',
-    url='https://github.com/sivel/ansible-template-ui',
+    url='https://github.com/lj020326/ansible-template-ui',
     license='Apache License, Version 2.0',
     packages=find_packages(exclude=['tests', 'tests.*']),
     install_requires=requirements,

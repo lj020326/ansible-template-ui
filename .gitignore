@@ -102,3 +102,11 @@ ENV/
 
 # local
 *.pex
+
+## IDEs are developer-specific
+.vscode/
+.idea/
+.DS_Store
+
+## information stored locally - saved snapshots/etc
+save/
