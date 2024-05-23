@@ -42,15 +42,14 @@ services:
   ## ANSIBLETEMPLATEUI GROUP SERVICES
   ansible-template-ui:
 #    image: lj020326/ansible-template-ui:latest
-    image: media.johnson.int:5000/ansible-template-ui:latest
+#    image: media.johnson.int:5000/ansible-template-ui:latest
+    image: ansible-template-ui:latest
     container_name: ansible-template-ui
     restart: unless-stopped
-    privileged: True
-    user: root
     environment:
-       DOCKER_ANSIBLE_EE_IMAGE: media.johnson.int:5000/ansible-execution-env:latest
-#       DOCKER_ANSIBLE_EE_IMAGE: lj020326/ansible-execution-env
-#       DOCKER_ANSIBLE_EE_IMAGE: sivel/ansible-template-ui
+       LOG_LEVEL: DEBUG
+       DOCKER_ANSIBLE_EE_IMAGE: lj020326/ansible-execution-env
+#       DOCKER_ANSIBLE_EE_IMAGE: media.johnson.int:5000/ansible-execution-env:latest
     ports:
       - 8080:8080
     volumes:

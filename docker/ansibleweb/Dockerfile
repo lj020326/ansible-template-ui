@@ -21,6 +21,12 @@ RUN apt-get install --no-install-recommends -y \
     sudo bash \
     build-essential \
     ca-certificates \
+    dnsutils \
+    iproute2 \
+    openssh-client \
+    iputils-ping \
+    inetutils-telnet \
+    ssh-askpass sshpass \
     curl wget git \
     jq
 

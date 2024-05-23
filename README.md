@@ -49,6 +49,8 @@ $ docker run -d --name ansible-web \
     -p 8123:8080 \
     -v /var/run/docker.sock:/var/run/docker.sock \
     ansible-template-ui:latest
+## after finished - stop and remove container
+$ docker stop ansible-web || true && docker rm -f ansible-web    
 ```
 
 Run locally built developer images

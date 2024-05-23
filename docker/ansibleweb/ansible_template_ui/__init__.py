@@ -114,9 +114,6 @@ def render_template():
 
     client = docker.from_env()
 
-    # repository, tag = docker.utils.parse_repository_tag(
-    #     os.getenv('DOCKER_IMAGE', 'sivel/ansible-template-ui')
-    # )
     repository, tag = docker.utils.parse_repository_tag(
         os.getenv('DOCKER_ANSIBLE_EE_IMAGE', 'lj020326/ansible-execution-env')
     )
@@ -164,8 +161,8 @@ def render_template():
         stdout = container.logs(stdout=True, stderr=False)
         stderr = container.logs(stdout=False, stderr=True)
 
-        app.logger.info("container.stdout=%s" % PrettyLog(stdout))
-        app.logger.info("container.stderr=%s" % PrettyLog(stderr))
+        app.logger.debug("container.stdout=%s" % PrettyLog(stdout))
+        app.logger.debug("container.stderr=%s" % PrettyLog(stderr))
 
         # if stderr:
         #     return jsonify(**{'error': text.native(stderr)}), 400
@@ -177,9 +174,9 @@ def render_template():
             app.logger.exception('Could not parse JSON')
             error = stderr or 'Unknown Error'
         else:
-            app.logger.info("response=%s" % PrettyLog(response))
+            app.logger.debug("response=%s" % PrettyLog(response))
             play = response['plays'][0]
-            app.logger.info("play=%s" % PrettyLog(play))
+            app.logger.debug("play=%s" % PrettyLog(play))
             # if exit_status['StatusCode'] != 0:
             if exit_status != 0:
                 error = play['tasks'][-1]['hosts']['localhost']['msg']
